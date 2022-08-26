@@ -1,0 +1,46 @@
+#cloud-config
+autoinstall:
+    version: 1
+    early-commands:
+        # Stop ssh for packer
+        - sudo systemctl stop ssh
+    locale: en_US
+    keyboard:
+        layout: en
+        variant: us
+    network:
+		network:
+			version: 2
+			ethernets:
+				ens192:
+					dhcp4: false
+					addresses: 10.180.12.155/24
+					gateway4: 10.180.12.20
+					nameservers:
+						addresses: 8.8.8.8
+	packages: [open-vm-tools, openssh-server, net-tools, perl, open-iscsi, ntp, curl, vim, ifupdown, zip, unzip, gnupg2, software-properties-common, apt-transport-https, ca-certificates, lsb-release, python3-pip, jq]
+    identity:
+        hostname: ubuntu-server
+        username: ubuntu
+        password: "ubuntu"
+
+    ssh:
+        install-server: yes
+        allow-pw: yes
+        authorized-keys:
+            - 
+    storage:
+        layout:
+            name: lvm
+    apt:
+        primary:
+            - arches: [i386, amd64]
+              uri: "http://archive.ubuntu.com/ubuntu/"
+    user-data:
+      disable_root: false
+    late-commands:
+      - sed -i -e 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /target/etc/ssh/sshd_config
+      - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
+      - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/ubuntu
+      - curtin in-target --target=/target -- apt-get update
+      - curtin in-target --target=/target -- apt-get upgrade --yes

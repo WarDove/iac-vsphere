@@ -45,3 +45,6 @@ override.tf.json
 terraform.rc
 **/.terraformrc
 **/terraform.rc
+
+# packer_cache
+**/packer_cache/*
