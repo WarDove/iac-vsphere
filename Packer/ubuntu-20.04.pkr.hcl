@@ -15,14 +15,14 @@ variable "vcenter_password" {
 variable "ssh_username" {
   type        = string
   description = "The username to use to authenticate over SSH."
-  default     = "ubuntu"
+  default     = "devops"
   #sensitive   = true
 }
 
 variable "ssh_password" {
   type        = string
   description = "The plaintext password to use to authenticate over SSH."
-  default     = "ubuntu"
+  default     = "12345678"
   #sensitive   = true
 }
 
@@ -170,7 +170,7 @@ variable "vm_mem_size" {
 variable "vm_disk_size" {
   type        = number
   description = "The size for the virtual disk in MB."
-  default     = "100000"
+  default     = "51200"
 }
 
 variable "vm_disk_controller_type" {
@@ -225,7 +225,7 @@ source "vsphere-iso" "linux-ubuntu-server" {
   guest_os_type        = var.vm_guest_os_type
   vm_version           = var.vm_version
   notes                = "Built by HashiCorp Packer on ${local.buildtime}."
-  vm_name              = "${var.vm_guest_os_family}-${var.vm_guest_os_vendor}-${var.vm_guest_os_member}-${var.vm_guest_os_version}"
+  vm_name              = "${var.vm_guest_os_family}-${var.vm_guest_os_vendor}-${var.vm_guest_os_member}-${var.vm_guest_os_version}-test"
   firmware             = var.vm_firmware
   CPUs                 = var.vm_cpu_sockets
   cpu_cores            = var.vm_cpu_cores
@@ -248,16 +248,13 @@ source "vsphere-iso" "linux-ubuntu-server" {
   http_directory = var.http_directory
   boot_order     = "disk,cdrom"
   boot_wait      = var.vm_boot_wait
-  boot_command = [
-    "<esc><esc><esc>",
-    "<enter><wait>",
-    "/casper/vmlinuz ",
-    "root=/dev/sr0 ",
-    "initrd=/casper/initrd ",
-    "autoinstall ",
-    "ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/",
-    "<enter>"
-  ]
+  boot_command   = [
+    "<esc><enter><f6><esc><wait> ",
+    "<bs><bs><bs><bs><bs>",
+    "ip=10.180.12.155::10.180.12.20:255.255.255.0::::8.8.8.8:8.8.4.4 ",
+    "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+    "--- <enter>"
+    ]
   ip_wait_timeout        = "20m"
   ssh_password           = var.ssh_password
   ssh_username           = var.ssh_username
