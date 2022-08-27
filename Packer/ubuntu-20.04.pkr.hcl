@@ -22,7 +22,7 @@ variable "ssh_username" {
 variable "ssh_password" {
   type        = string
   description = "The plaintext password to use to authenticate over SSH."
-  default     = "12345678"
+  default     = "Westside592"
   #sensitive   = true
 }
 
