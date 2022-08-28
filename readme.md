@@ -1,6 +1,6 @@
 PKRVARS EXAMPLES FOR PACKER:
 
-variables.auto.pkrvars.hcl =>
+variables.auto.pkrvars.hcl 
 
 vcenter_username   = "<your data>"
 vcenter_password   = "<your data>"
@@ -21,7 +21,7 @@ vm_mask             = "255.255.255.0"
 nameservers         = ["8.8.8.8", "8.8.4.4"]
 
 
-consul.pkrvars.hcl =>
+consul.pkrvars.hcl 
 
 ssh_username     = "<your data>"
 ssh_password     = "<your data>"
