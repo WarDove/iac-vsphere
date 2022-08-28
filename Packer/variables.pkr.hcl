@@ -227,7 +227,7 @@ variable "nameservers" {
 variable "packages" {
   type        = list(string)
   description = "Packages for the templete"
-  default     = ["openssh-server", "curl", "vim"]
+  default     = ["openssh-server"]
 }
 
 variable "vm_password_salt" {
