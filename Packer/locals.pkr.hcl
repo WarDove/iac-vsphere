@@ -21,3 +21,9 @@ locals {
     packages    = var.packages
   }
 }
+
+locals { 
+ build_number = file("${path.root}/content/build.md")
+ }
+
+

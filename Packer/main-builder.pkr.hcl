@@ -17,7 +17,7 @@ source "vsphere-iso" "linux-ubuntu-server" {
   guest_os_type        = var.vm_guest_os_type
   vm_version           = var.vm_version
   notes                = "Built by HashiCorp Packer on ${local.buildtime}."
-  vm_name              = "${var.vm_guest_os_family}-${var.vm_guest_os_vendor}-${var.vm_guest_os_member}-${var.vm_guest_os_version}-test"
+  vm_name              = "${var.vm_guest_os_vendor}-${var.vm_role}-build:${local.build_number}"
   firmware             = var.vm_firmware
   CPUs                 = var.vm_cpu_sockets
   cpu_cores            = var.vm_cpu_cores

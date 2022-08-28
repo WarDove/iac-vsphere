@@ -115,7 +115,7 @@ variable "vm_guest_os_vendor" {
 variable "vm_guest_os_member" {
   type        = string
   description = "The guest operating system member."
-  default     = "desktop-amd64"
+  default     = "server-amd64"
 }
 
 variable "vm_guest_os_version" {
@@ -229,12 +229,6 @@ variable "packages" {
   description = "Packages for the templete"
   default     = ["openssh-server", "curl", "vim"]
 }
-
-#variable "vm_encrypted_pass" {
-#  type        = string
-#  description = "encrypted user password"
-#  default     = "$6$NeverToThinkPass$MtEKtpr9GsUYJyeJjnWpILRIauXHz7y2qaeI9HA5bW1fhkJpdlqk6beIkfgD5uV8ITz9vVXg0w1eXckVjp0B.1"
-#}
 
 variable "vm_password_salt" {
   type        = string
