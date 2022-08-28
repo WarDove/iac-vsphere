@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Usage: packer-build -var-file=consul.pkrvars.hcl
+
 #set -e # abort if there is an issue with any build
 
 # Create temporary content to evade errors
@@ -6,21 +9,21 @@ touch /tmp/vm_encrypted_pass
 mkdir content
 
 # Increment build number
-n=40;#build number
+n=45;#build number
 next_n=$[$n+1]
 sed -i "/#build number$/s/=.*#/=$next_n;#/" ${0}
 printf '%s' $n > content/build.md
 
 # Run Step Builds
-packer build -only='step-1.null.encrypted-pass' .
-packer build -only='step-2.file.meta-data' .
+packer build -only='step-1.null.encrypted-pass' ${1} .
+packer build -only='step-2.file.meta-data' ${1} .
 
-echo "================= build info ======================="
+echo "================= IMAGE INFO ======================="
 cat content/meta-data | jq
 echo "===================================================="
 
-packer build -only='step-2.file.user-data' .
-packer build -only='step-3.vsphere-iso.linux-ubuntu-server' .
+packer build -only='step-2.file.user-data' ${1} .
+packer build -only='step-3.vsphere-iso.linux-ubuntu-server' ${1} .
 
 # Remove residual files
 CONTENT=./content
