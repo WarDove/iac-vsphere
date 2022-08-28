@@ -1,4 +1,4 @@
-PKRVARS EXAMPLES:
+PKRVARS EXAMPLES FOR PACKER:
 
 variables.auto.pkrvars.hcl =>
 ##################################################################################
@@ -40,3 +40,5 @@ vm_disk_size     = "51200"
 vm_role          = "consul"
 shell_scripts    = ["./scripts/ubuntu_clean.sh"]
 packages         = ["openssh-server"]
+
+
