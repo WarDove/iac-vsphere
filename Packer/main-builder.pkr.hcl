@@ -16,8 +16,8 @@ source "vsphere-iso" "linux-ubuntu-server" {
   convert_to_template  = true
   guest_os_type        = var.vm_guest_os_type
   vm_version           = var.vm_version
-  notes                = "Built by HashiCorp Packer on ${local.buildtime}."
-  vm_name              = "${var.vm_guest_os_vendor}-${var.vm_role}-build:${local.build_number}"
+  notes                = "Built by HashiCorp Packer on ${local.buildtime}. Author: AzInDevops"
+  vm_name              = "${var.vm_guest_os_vendor}-${var.vm_role}-build:${local.buildnumber}"
   firmware             = var.vm_firmware
   CPUs                 = var.vm_cpu_sockets
   cpu_cores            = var.vm_cpu_cores
@@ -42,7 +42,6 @@ source "vsphere-iso" "linux-ubuntu-server" {
   http_content = {
     "/meta-data" = file("content/meta-data")
     "/user-data" = file("content/user-data")
-    #"/user-data" = templatefile("${path.root}/http/user-data.pkrtpl.hcl", local.userdata_template_map)
   }
   boot_order = "disk,cdrom"
   boot_wait  = var.vm_boot_wait

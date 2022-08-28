@@ -84,7 +84,7 @@ variable "iso_path" {
   default     = "iso/"
 }
 
-variable iso_file {
+variable "iso_file" {
   type        = string
   description = "The file name of the guest operating system ISO image installation media."
   default     = "ubuntu-20.04.4-live-server-amd64.iso"
