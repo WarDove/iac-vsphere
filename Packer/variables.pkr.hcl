@@ -17,14 +17,14 @@ variable "vcenter_password" {
 variable "ssh_username" {
   type        = string
   description = "The username to use to authenticate over SSH."
-  default = "ubuntu"
+  default     = "ubuntu"
   sensitive   = true
 }
 
 variable "ssh_password" {
   type        = string
   description = "The plaintext password to use to authenticate over SSH."
-  default = "ubuntu"
+  default     = "ubuntu"
   sensitive   = true
 }
 
@@ -141,25 +141,25 @@ variable "vm_cdrom_type" {
 variable "vm_cpu_sockets" {
   type        = number
   description = "The number of virtual CPUs sockets."
-  default = "4"
+  default     = "4"
 }
 
 variable "vm_cpu_cores" {
   type        = number
   description = "The number of virtual CPUs cores per socket."
-  default = "1"
+  default     = "1"
 }
 
 variable "vm_mem_size" {
   type        = number
   description = "The size for the virtual memory in MB."
-  default = "4096"
+  default     = "4096"
 }
 
 variable "vm_disk_size" {
   type        = number
   description = "The size for the virtual disk in MB."
-  default = "51200"
+  default     = "51200"
 }
 
 variable "vm_disk_controller_type" {
@@ -225,7 +225,7 @@ variable "packages" {
 variable "vm_password_salt" {
   type        = string
   description = "salt for password encryption"
-  default = "16lettersforsalt"
+  default     = "16lettersforsalt"
   sensitive   = true
 }
 
