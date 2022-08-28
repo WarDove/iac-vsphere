@@ -1,7 +1,7 @@
 ##################################################################################
 # Vsphere common values
 ##################################################################################
-
+#test
 vcenter_username   = "administrator@azininfradev.local"
 vcenter_password   = "123456Bb@"
 vcenter_server     = "10.180.12.151"
