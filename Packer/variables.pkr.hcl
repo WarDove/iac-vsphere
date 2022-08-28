@@ -1,3 +1,7 @@
+##################################################################################
+# Vsphere variables
+##################################################################################
+
 variable "vcenter_username" {
   type        = string
   description = "The username for authenticating to vCenter."
@@ -26,7 +30,6 @@ variable "ssh_password" {
   #sensitive   = true
 }
 
-# vSphere Objects
 
 variable "vcenter_insecure_connection" {
   type        = bool
@@ -70,7 +73,10 @@ variable "vcenter_folder" {
   default     = "templates"
 }
 
-# ISO Objects
+##################################################################################
+# ISO variables
+##################################################################################
+
 
 variable "iso_path" {
   type        = string
@@ -81,7 +87,7 @@ variable "iso_path" {
 variable iso_file {
   type        = string
   description = "The file name of the guest operating system ISO image installation media."
-  default = "ubuntu-20.04.4-live-server-amd64.iso"
+  default     = "ubuntu-20.04.4-live-server-amd64.iso"
 }
 
 variable "iso_checksum" {
@@ -90,15 +96,9 @@ variable "iso_checksum" {
   default     = "28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad"
 }
 
-# HTTP Endpoint
-
-variable "http_directory" {
-  type        = string
-  description = "Directory of config files(user-data, meta-data)."
-  default     = "http"
-}
-
-# Virtual Machine Settings
+##################################################################################
+# VM variables
+##################################################################################
 
 variable "vm_guest_os_family" {
   type        = string
@@ -130,11 +130,10 @@ variable "vm_guest_os_type" {
   default     = "ubuntu64Guest"
 }
 
-variable vm_version {
+variable "vm_version" {
   type        = number
   description = "The VM virtual hardware version."
   default     = "14"
-  # https://kb.vmware.com/s/article/1003746
 }
 
 variable "vm_firmware" {
@@ -198,86 +197,78 @@ variable "shell_scripts" {
   default     = ["./scripts/setup_ubuntu2004.sh"]
 }
 
-##################################################################################
-# LOCALS
-##################################################################################
 
-locals {
-  buildtime = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+# Templating variables
+
+variable "vm_ipv4" {
+  type        = string
+  description = "Ip for the temporary template VM"
+  default     = "10.180.12.155"
 }
 
-##################################################################################
-# SOURCE
-##################################################################################
-
-source "vsphere-iso" "linux-ubuntu-server" {
-  vcenter_server       = var.vcenter_server
-  username             = var.vcenter_username
-  password             = var.vcenter_password
-  datacenter           = var.vcenter_datacenter
-  datastore            = var.vcenter_datastore
-  host                 = var.vcenter_host
-  folder               = var.vcenter_folder
-  insecure_connection  = var.vcenter_insecure_connection
-  tools_upgrade_policy = true
-  remove_cdrom         = true
-  convert_to_template  = true
-  guest_os_type        = var.vm_guest_os_type
-  vm_version           = var.vm_version
-  notes                = "Built by HashiCorp Packer on ${local.buildtime}."
-  vm_name              = "${var.vm_guest_os_family}-${var.vm_guest_os_vendor}-${var.vm_guest_os_member}-${var.vm_guest_os_version}-test"
-  firmware             = var.vm_firmware
-  CPUs                 = var.vm_cpu_sockets
-  cpu_cores            = var.vm_cpu_cores
-  CPU_hot_plug         = false
-  RAM                  = var.vm_mem_size
-  RAM_hot_plug         = false
-  cdrom_type           = var.vm_cdrom_type
-  disk_controller_type = var.vm_disk_controller_type
-  storage {
-    disk_size             = var.vm_disk_size
-    disk_controller_index = 0
-    disk_thin_provisioned = true
-  }
-  network_adapters {
-    network      = var.vcenter_network
-    network_card = var.vm_network_card
-  }
-  iso_paths      = ["[${var.vcenter_datastore}] /${var.iso_path}/${var.iso_file}"]
-  iso_checksum   = "sha512:var.iso_checksum"
-  http_directory = var.http_directory
-  boot_order     = "disk,cdrom"
-  boot_wait      = var.vm_boot_wait
-  boot_command   = [
-    "<esc><enter><f6><esc><wait> ",
-    "<bs><bs><bs><bs><bs>",
-    "ip=10.180.12.155::10.180.12.20:255.255.255.0::::8.8.8.8:8.8.4.4 ",
-    "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
-    "--- <enter>"
-    ]
-  ip_wait_timeout        = "20m"
-  ssh_password           = var.ssh_password
-  ssh_username           = var.ssh_username
-  ssh_port               = 22
-  ssh_timeout            = "60m"
-  ssh_handshake_attempts = "100000"
-  shutdown_command       = "echo '${var.ssh_password}' | sudo -S -E shutdown -P now"
-  shutdown_timeout       = "15m"
+variable "vm_gateway" {
+  type        = string
+  description = "Gateway of the temporary VM"
+  default     = "10.180.12.20"
 }
 
-##################################################################################
-# BUILD
-##################################################################################
-
-build {
-  sources = [
-  "source.vsphere-iso.linux-ubuntu-server"]
-  provisioner "shell" {
-    execute_command = "echo '${var.ssh_password}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    environment_vars = [
-      "BUILD_USERNAME=${var.ssh_username}",
-    ]
-    scripts           = var.shell_scripts
-    expect_disconnect = true
-  }
+variable "vm_mask_bits" {
+  type        = string
+  description = "Subnet mask representation in bits"
+  default     = "24"
 }
+
+variable "nameservers" {
+  type        = list(string)
+  description = "Nameservers for the temporary template VM"
+  default     = ["8.8.8.8", "8.8.4.4"]
+}
+
+variable "packages" {
+  type        = list(string)
+  description = "Packages for the templete"
+  default     = ["openssh-server", "curl", "vim"]
+}
+
+#variable "vm_encrypted_pass" {
+#  type        = string
+#  description = "encrypted user password"
+#  default     = "$6$NeverToThinkPass$MtEKtpr9GsUYJyeJjnWpILRIauXHz7y2qaeI9HA5bW1fhkJpdlqk6beIkfgD5uV8ITz9vVXg0w1eXckVjp0B.1"
+#}
+
+variable "vm_password_salt" {
+  type        = string
+  description = "salt for password encryption"
+  default     = "qezenfer12345678"
+}
+
+variable "realname" {
+  type        = string
+  description = "User Realname"
+  default     = "DevOps"
+}
+
+variable "vm_hostname" {
+  type        = string
+  description = "VM hostname"
+  default     = "ubuntu"
+}
+
+variable "vm_mask" {
+  type        = string
+  description = "Subnet representation"
+  default     = "255.255.255.0"
+}
+
+variable "vm_role" {
+  type        = string
+  description = "Role of the machine"
+  default     = "test-machine"
+}
+
+
+
+
+
+
+

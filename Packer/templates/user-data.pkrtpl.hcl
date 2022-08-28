@@ -13,10 +13,10 @@ autoinstall:
       - default
       uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
-    hostname: ubuntu
-    password: $6$NeverToThinkPass$MtEKtpr9GsUYJyeJjnWpILRIauXHz7y2qaeI9HA5bW1fhkJpdlqk6beIkfgD5uV8ITz9vVXg0w1eXckVjp0B.1
-    realname: devops
-    username: devops
+    hostname: ${vm_hostname}
+    password: ${vm_encrypted_pass}
+    realname: ${realname}
+    username: ${vm_username}
   kernel:
     package: linux-generic
   keyboard:
@@ -29,23 +29,23 @@ autoinstall:
       ethernets:
         eth0:
           addresses:
-          - 10.180.12.155/24
-          gateway4: 10.180.12.20
+          - ${vm_ip_addr}
+          gateway4: ${vm_gateway} 
           nameservers:
-            addresses:
-            - 8.8.8.8
-            - 8.8.4.4
+            addresses: 
+%{ for dns in nameservers ~}
+            - ${dns}
+%{ endfor ~}
             search: []
     version: 2
   ssh:
     allow-pw: true
     authorized-keys: []
     install-server: true
-  packages:
-    - open-vm-tools
-    - openssh-server
-    - curl
-    - vim
+  packages: 
+%{ for package in packages ~}
+  - ${package}
+%{ endfor ~}
   storage:
     layout:
       name: lvm
