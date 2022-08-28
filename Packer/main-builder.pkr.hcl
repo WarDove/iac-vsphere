@@ -48,7 +48,7 @@ source "vsphere-iso" "linux-ubuntu-server" {
   boot_command = [
     "<esc><enter><f6><esc><wait> ",
     "<bs><bs><bs><bs><bs>",
-    "ip=10.180.12.155::10.180.12.20:255.255.255.0::::8.8.8.8:8.8.4.4 ",
+    "ip=${var.vm_ipv4}::${var.vm_gateway}:${var.vm_mask}::::${var.nameservers[0]}:${var.nameservers[1]} ",
     "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
     "--- <enter>"
   ]
