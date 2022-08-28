@@ -1,9 +1,6 @@
 PKRVARS EXAMPLES FOR PACKER:
 
 variables.auto.pkrvars.hcl =>
-##################################################################################
-# Vsphere common values
-##################################################################################
 
 vcenter_username   = "<your data>"
 vcenter_password   = "<your data>"
@@ -25,9 +22,6 @@ nameservers         = ["8.8.8.8", "8.8.4.4"]
 
 
 consul.pkrvars.hcl =>
-##################################################################################
-# Consul machine values
-##################################################################################
 
 ssh_username     = "<your data>"
 ssh_password     = "<your data>"
