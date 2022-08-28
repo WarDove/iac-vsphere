@@ -1,7 +1,7 @@
 ##################################################################################
 # Vsphere common values
 ##################################################################################
-
+#test
 vcenter_username   = "<your data>"
 vcenter_password   = "<your data>"
 vcenter_server     = "<your data>1"
