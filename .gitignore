@@ -53,7 +53,7 @@ terraform.rc
 # password, private keys, and other secrets. These should not be part of version 
 # control as they are data points which are potentially sensitive and subject 
 # to change depending on the environment.
-*.pkrvars
+*.pkrvars.hcl
 *.pkrvars.json
-**/*.pkrvars
+**/*.pkrvars.hcl
 **/*.pkrvars.json
