@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage: packer-build -var-file=consul.pkrvars.hcl
-
+# for latest tag : ./packer-build -var-file=consul.pkrvars.hcl --production #or -p
 #set -e # abort if there is an issue with any build
 
 # Create temporary content to evade errors
@@ -9,10 +9,15 @@ touch /tmp/vm_encrypted_pass
 mkdir content
 
 # Increment build number
-n=47;#build number
+n=69;#build number
 next_n=$[$n+1]
 sed -i "/#build number$/s/=.*#/=$next_n;#/" ${0}
-printf '%s' $n > content/build.md
+
+if [[ "${2}" == "-p" || "${2}" == "--production" ]]; then
+    printf '%s' "latest" > content/build.md
+else
+    printf '%s' $n > content/build.md
+fi
 
 # Run Step Builds
 packer build -only='step-1.null.encrypted-pass' ${1} .

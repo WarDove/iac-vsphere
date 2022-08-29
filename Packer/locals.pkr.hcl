@@ -29,7 +29,7 @@ locals {
     author                   = "AzInDevops"
     hostname                 = "${var.vm_guest_os_vendor}-${var.vm_role}"
     build_time               = local.buildtime
-    build_number             = local.buildnumber
+    build_tag                = local.buildnumber
     datacenter               = var.vcenter_datacenter
     datastrore               = var.vcenter_datastore
     base_image               = var.iso_file
