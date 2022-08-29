@@ -1,57 +1,38 @@
-# # Create the DC
-# resource "vsphere_datacenter" "azin-sphere-dc" {
-#   name = var.dc_name
-# }
-
-# # Add underlying hosts into DC
-# resource "vsphere_host" "esx-01" {
-#   hostname   = var.esx-01_server
-#   username   = var.esx-01_user
-#   password   = var.esx-01_password
-#   datacenter = vsphere_datacenter.azin-sphere-dc.moid
-
-#   lifecycle {
-#     ignore_changes = [
-#       cluster
-#     ]
-#   }
-# }
-
 data "vsphere_datacenter" "main-dc" {
-  name = "azin-sphere-dc"
+  name = var.vcenter_datacenter
 }
 
 # Get Datastore info from vcenter
 data "vsphere_datastore" "main-datastore" {
-  name          = "main-datastore"
+  name          = var.vcenter_datastore
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
 # Get Network info from vcenter
 data "vsphere_network" "vm-network" {
-  name          = "VLAN3513"
+  name          = var.vcenter_network
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
 # Target Resource Pool
 data "vsphere_resource_pool" "target-resource-pool" {
-  name          = "${var.esx-01_server}/Resources/"
+  name          = "${var.vcenter_host}/Resources/"
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "linux-ubuntu-desktop-amd64-22-04-lts"
+  name          = var.consul_template_name
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
 # Provision a VM
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "hello-world"
+  name             = var.consul_machine_hostname
   resource_pool_id = data.vsphere_resource_pool.target-resource-pool.id
   datastore_id     = data.vsphere_datastore.main-datastore.id
-  num_cpus         = 1
-  memory           = 1024
+  num_cpus         = data.vsphere_virtual_machine.template.num_cpus
+  memory           = data.vsphere_virtual_machine.template.memory
   guest_id         = data.vsphere_virtual_machine.template.guest_id
   scsi_type        = data.vsphere_virtual_machine.template.scsi_type
 
@@ -60,7 +41,7 @@ resource "vsphere_virtual_machine" "vm" {
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
   disk {
-    label            = "disk0"
+    label            = data.vsphere_virtual_machine.template.disks.0.label
     size             = data.vsphere_virtual_machine.template.disks.0.size
     thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
   }
@@ -68,8 +49,8 @@ resource "vsphere_virtual_machine" "vm" {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
       linux_options {
-        host_name = "hello-world"
-        domain    = "example.com"
+        host_name = var.consul_machine_hostname
+        domain    = "consul.rinn.az"
       }
       network_interface {
         ipv4_address = "10.180.12.170"
