@@ -20,33 +20,33 @@ data "vsphere_resource_pool" "target-resource-pool" {
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
-data "vsphere_virtual_machine" "template" {
+data "vsphere_virtual_machine" "consul-template" {
   name          = var.consul_template_name
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
 # Provision a VM
 
-resource "vsphere_virtual_machine" "vm" {
+resource "vsphere_virtual_machine" "consul-vm" {
   name             = var.consul_machine_hostname
   resource_pool_id = data.vsphere_resource_pool.target-resource-pool.id
   datastore_id     = data.vsphere_datastore.main-datastore.id
-  num_cpus         = data.vsphere_virtual_machine.template.num_cpus
-  memory           = data.vsphere_virtual_machine.template.memory
-  guest_id         = data.vsphere_virtual_machine.template.guest_id
-  scsi_type        = data.vsphere_virtual_machine.template.scsi_type
+  num_cpus         = data.vsphere_virtual_machine.consul-template.num_cpus
+  memory           = data.vsphere_virtual_machine.consul-template.memory
+  guest_id         = data.vsphere_virtual_machine.consul-template.guest_id
+  scsi_type        = data.vsphere_virtual_machine.consul-template.scsi_type
 
   network_interface {
     network_id   = data.vsphere_network.vm-network.id
-    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+    adapter_type = data.vsphere_virtual_machine.consul-template.network_interface_types[0]
   }
   disk {
-    label            = data.vsphere_virtual_machine.template.disks.0.label
-    size             = data.vsphere_virtual_machine.template.disks.0.size
-    thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
+    label            = data.vsphere_virtual_machine.consul-template.disks.0.label
+    size             = data.vsphere_virtual_machine.consul-template.disks.0.size
+    thin_provisioned = data.vsphere_virtual_machine.consul-template.disks.0.thin_provisioned
   }
   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
+    template_uuid = data.vsphere_virtual_machine.consul-template.id
     customize {
       linux_options {
         host_name = var.consul_machine_hostname

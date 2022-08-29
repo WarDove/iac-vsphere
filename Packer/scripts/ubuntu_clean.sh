@@ -11,8 +11,8 @@ if [ -f /var/log/lastlog ]; then
 cat /dev/null > /var/log/lastlog
 fi
 # Cleans SSH keys.
-echo '> Cleaning SSH keys ...'
-rm -f /etc/ssh/ssh_host_*
+#echo '> Cleaning SSH keys ...' REMOVING THIS LINE FOR INTERNAL USAGE
+#rm -f /etc/ssh/ssh_host_*
 # Sets hostname to localhost.
 echo '> Setting hostname to localhost ...'
 cat /dev/null > /etc/hostname
