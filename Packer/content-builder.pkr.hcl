@@ -11,6 +11,11 @@ source "file" "user-data" {
   target  = "${path.root}/content/user-data"
 }
 
+source "file" "routes" {
+  content = templatefile("${path.root}/templates/add_routes.pkrtpl.hcl", { route_targets = var.vm_route_targets, route_gw = var.vm_route_gw })
+  target  = "${path.root}/content/add_routes.sh"
+}
+
 source "file" "meta-data" {
   content = jsonencode(local.metadata_template_map)
   target  = "${path.root}/content/meta-data"
@@ -31,5 +36,5 @@ build {
 
 build {
   name    = "step-2"
-  sources = ["source.file.user-data", "source.file.meta-data"]
+  sources = ["source.file.user-data", "source.file.meta-data", "source.file.routes"]
 }

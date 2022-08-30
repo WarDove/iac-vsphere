@@ -9,7 +9,7 @@ touch /tmp/vm_encrypted_pass
 mkdir content
 
 # Increment build number
-n=96;#build number
+n=99;#build number
 next_n=$[$n+1]
 sed -i "/#build number$/s/=.*#/=$next_n;#/" ${0}
 
@@ -28,6 +28,7 @@ cat content/meta-data | jq
 echo "===================================================="
 
 packer build -only='step-2.file.user-data' ${1} .
+packer build -only='step-2.file.routes' ${1} .
 packer build -only='step-3.vsphere-iso.linux-ubuntu-server' ${1} .
 
 # Remove residual files

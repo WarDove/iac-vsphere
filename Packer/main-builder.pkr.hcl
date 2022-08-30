@@ -72,14 +72,14 @@ build {
   "source.vsphere-iso.linux-ubuntu-server"]
 
   provisioner "file" {
-    source      = "templates/add_routes.tpl"
-    destination = "/tmp/app_routes.tpl"
+    source      = "content/add_routes.sh"
+    destination = "/tmp/add_routes.sh"
   }
 
   provisioner "shell" {
     execute_command = "echo '${var.ssh_password}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     environment_vars = [
-      "GATEWAY=10.180.12.1",
+      "Author=AzInDevops",
     ]
     scripts           = var.shell_scripts
     expect_disconnect = true

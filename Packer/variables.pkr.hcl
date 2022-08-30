@@ -246,3 +246,16 @@ variable "vm_role" {
   description = "Role of the machine"
   default     = "machine"
 }
+
+variable "vm_route_targets" {
+  type        = list(string)
+  description = "Routing targets"
+  default     = ["10.70.0.0/24"]
+}
+
+variable "vm_route_gw" {
+  type        = string
+  description = "Routing Gateway"
+  default     = "10.180.12.1"
+}
+
