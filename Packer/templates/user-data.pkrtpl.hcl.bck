@@ -116,8 +116,8 @@ autoinstall:
   updates: security
   version: 1
   late-commands:
+    - echo '${vm_username} ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/${vm_username}
     - sed -ie 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /target/etc/default/grub
-    - curtin in-target --target=/target -- echo '${vm_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${vm_username}
     - curtin in-target --target=/target -- update-grub2
     - curtin in-target --target=/target -- apt-get update
     - curtin in-target --target=/target -- apt-get upgrade --yes

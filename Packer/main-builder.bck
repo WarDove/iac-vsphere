@@ -80,6 +80,8 @@ build {
     execute_command = "echo '${var.ssh_password}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     environment_vars = [
       "GATEWAY=10.180.12.1",
+      "IP_LIST=('10.70.0.140' '10.70.0.141' '10.70.0.142')",
+      "ip='$ip'"
     ]
     scripts           = var.shell_scripts
     expect_disconnect = true
