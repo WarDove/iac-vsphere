@@ -1,0 +1,25 @@
+server = true
+
+node_name = "${node_name}"
+
+datacenter = "consul-cluster"
+
+data_dir = "/opt/consul"
+
+bind_addr = "0.0.0.0"
+
+client_addr = "0.0.0.0"
+
+advertise_addr = "${advertise_addr}"
+
+bootstrap_expect = 3
+
+retry_join = ${retry_join}
+
+ui = true
+
+log_level = "DEBUG"
+
+enable_syslog = true
+
+acl_enforce_version_8 = false

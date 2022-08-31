@@ -37,7 +37,7 @@ data "vsphere_virtual_machine" "consul-template" {
 
 # Provision consul machines
 resource "vsphere_virtual_machine" "consul-vm" {
-  count            = 3
+  count            = var.consul_vm_count
   name             = "${var.consul_machine_hostname}-${count.index + 1}"
   resource_pool_id = data.vsphere_resource_pool.target-resource-pool.id
   datastore_id     = data.vsphere_datastore.main-datastore.id
@@ -71,6 +71,30 @@ resource "vsphere_virtual_machine" "consul-vm" {
       ipv4_gateway = var.vm_gateway
     }
   }
+
+  connection {
+    type     = "ssh"
+    user     = var.ssh_username
+    password = var.ssh_password
+    host     = self.default_ip_address
+  }
+
+  provisioner "file" {
+    destination = "/tmp/consul.hcl"
+    content = templatefile("${path.root}/templates/consul_server_conf.tftpl", {
+      node_name      = "consul_s${count.index + 1}"
+      advertise_addr = "${self.default_ip_address}"
+      retry_join     = jsonencode(local.consul_ip_list)
+    })
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo cp /tmp/consul.hcl /etc/consul.d/consul.hcl",
+      "sudo systemctl enable --now consul",
+    ]
+  }
+
 }
 
 ##################################################################################
@@ -85,7 +109,7 @@ data "vsphere_virtual_machine" "vault-template" {
 
 # Provision Vault machines
 resource "vsphere_virtual_machine" "vault-vm" {
-  count            = 2
+  count            = var.vault_vm_count
   name             = "${var.vault_machine_hostname}-${count.index + 1}"
   resource_pool_id = data.vsphere_resource_pool.target-resource-pool.id
   datastore_id     = data.vsphere_datastore.main-datastore.id
