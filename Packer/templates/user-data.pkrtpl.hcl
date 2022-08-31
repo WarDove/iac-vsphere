@@ -3,7 +3,7 @@ autoinstall:
   apt:
     disable_components: []
     geoip: true
-    preserve_sources_list: true
+    preserve_sources_list: false
     primary:
     - arches:
       - amd64
