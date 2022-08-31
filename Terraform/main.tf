@@ -1,40 +1,52 @@
+##################################################################################
+# General Data
+##################################################################################
+
+# Get DataCenter date from vcenter
 data "vsphere_datacenter" "main-dc" {
   name = var.vcenter_datacenter
 }
 
-# Get Datastore info from vcenter
+# Get Datastore date from vcenter
 data "vsphere_datastore" "main-datastore" {
   name          = var.vcenter_datastore
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
-# Get Network info from vcenter
+# Get Network data from vcenter
 data "vsphere_network" "vm-network" {
   name          = var.vcenter_network
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
-# Target Resource Pool
+# Locate target Resource Pool
 data "vsphere_resource_pool" "target-resource-pool" {
   name          = "${var.vcenter_host}/Resources/"
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
+##################################################################################
+# Consul Servers
+##################################################################################
+
+# Get template for consul created by packer
 data "vsphere_virtual_machine" "consul-template" {
   name          = var.consul_template_name
   datacenter_id = data.vsphere_datacenter.main-dc.id
 }
 
-# Provision a VM
-
+# Provision consul machines
 resource "vsphere_virtual_machine" "consul-vm" {
-  name             = var.consul_machine_hostname
+  count            = 1
+  name             = "${var.consul_machine_hostname}-${count.index + 1}"
   resource_pool_id = data.vsphere_resource_pool.target-resource-pool.id
   datastore_id     = data.vsphere_datastore.main-datastore.id
-  num_cpus         = data.vsphere_virtual_machine.consul-template.num_cpus
-  memory           = data.vsphere_virtual_machine.consul-template.memory
-  guest_id         = data.vsphere_virtual_machine.consul-template.guest_id
-  scsi_type        = data.vsphere_virtual_machine.consul-template.scsi_type
+  num_cpus         = 2
+  #num_cpus         = data.vsphere_virtual_machine.consul-template.num_cpus
+  memory = 4096
+  #memory           = data.vsphere_virtual_machine.consul-template.memory
+  guest_id  = data.vsphere_virtual_machine.consul-template.guest_id
+  scsi_type = data.vsphere_virtual_machine.consul-template.scsi_type
 
   network_interface {
     network_id   = data.vsphere_network.vm-network.id
@@ -49,14 +61,14 @@ resource "vsphere_virtual_machine" "consul-vm" {
     template_uuid = data.vsphere_virtual_machine.consul-template.id
     customize {
       linux_options {
-        host_name = var.consul_machine_hostname
-        domain    = "consul.rinn.az"
+        host_name = "${var.consul_machine_hostname}-${count.index + 1}"
+        domain    = "consul.local"
       }
       network_interface {
-        ipv4_address = "10.180.12.170"
-        ipv4_netmask = 24
+        ipv4_address = local.consul_ip_list[count.index]
+        ipv4_netmask = var.vm_mask_bits
       }
-      ipv4_gateway = "10.180.12.20"
+      ipv4_gateway = var.vm_gateway
     }
   }
 }
