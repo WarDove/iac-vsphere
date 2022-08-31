@@ -84,8 +84,8 @@ vm_cpu_cores     = "1"
 vm_mem_size      = "8192"
 vm_disk_size     = "51200"
 vm_role          = "consul"
-vm_route_gw      = "10.180.12.1"
-vm_route_targets = ["10.70.0.140/32", "10.70.0.141/32", "10.70.0.142/32"]
+vm_route_gw      = "10.10.20.1"
+vm_route_targets = ["10.10.30.1/32", "10.10.30.2/3", "10.10.30.3/3"]
 shell_scripts    = ["./scripts/consul_setup.sh", "./scripts/add_routes.sh", "./scripts/ubuntu_clean.sh"]
 packages         = ["openssh-server"]
 ```
