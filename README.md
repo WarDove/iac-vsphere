@@ -48,7 +48,7 @@ Data containin file examples are shown below.
 ##################################################################################
 # Vsphere common values
 ##################################################################################
-vcenter_username   = "some_user@azininfradev.local"
+vcenter_username   = "some_user@infradev.local"
 vcenter_password   = "somepassword"
 vcenter_datacenter = "vsphere-dc"
 vcenter_datastore  = "datastore"
