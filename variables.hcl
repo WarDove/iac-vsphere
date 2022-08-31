@@ -218,3 +218,20 @@ variable "consul_machine_hostname" {
   description = "The conventional hostname for the Consul machines."
   default     = "consul-server"
 }
+
+##################################################################################
+# Vault Machine variables
+##################################################################################
+
+variable "vault_template_name" {
+  type        = string
+  description = "The name of the template for Consul machine."
+  default     = "ubuntu-20-04-lts-vault-build:latest"
+}
+
+variable "vault_machine_hostname" {
+  type        = string
+  description = "The conventional hostname for the Consul machines."
+  default     = "vault-server"
+}
+
