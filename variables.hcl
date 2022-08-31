@@ -207,6 +207,12 @@ variable "vm_hostname" {
 # Consul Machine variables
 ##################################################################################
 
+variable "consul_vm_count" {
+  type        = number
+  description = "Number of machines in consul cluster"
+  default     = 3
+}
+
 variable "consul_template_name" {
   type        = string
   description = "The name of the template for Consul machine."
@@ -222,6 +228,12 @@ variable "consul_machine_hostname" {
 ##################################################################################
 # Vault Machine variables
 ##################################################################################
+
+variable "vault_vm_count" {
+  type        = number
+  description = "Number of machines in vault cluster"
+  default     = 2
+}
 
 variable "vault_template_name" {
   type        = string
