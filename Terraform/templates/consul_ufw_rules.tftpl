@@ -1,0 +1,6 @@
+#!/bin/bash
+%{ for ip in admin_ipv4_list ~}
+ufw allow from ${ip} to any port 22
+ufw allow from ${ip} to any port 8500
+%{ endfor ~}
+echo y | sudo -S ufw enable 

@@ -88,10 +88,19 @@ resource "vsphere_virtual_machine" "consul-vm" {
     })
   }
 
+  provisioner "file" {
+    destination = "/tmp/consul_ufw_rules.sh"
+    content = templatefile("${path.root}/templates/consul_ufw_rules.tftpl", {
+      admin_ipv4_list = var.admin_ipv4_list
+    })
+  }
+
+
   provisioner "remote-exec" {
     inline = [
       "sudo cp /tmp/consul.hcl /etc/consul.d/consul.hcl",
       "sudo systemctl enable --now consul",
+      "sudo bash /tmp/consul_ufw_rules.sh",
     ]
   }
 
@@ -143,5 +152,45 @@ resource "vsphere_virtual_machine" "vault-vm" {
       ipv4_gateway = var.vm_gateway
     }
   }
-}
 
+  connection {
+    type     = "ssh"
+    user     = var.ssh_username
+    password = var.ssh_password
+    host     = self.default_ip_address
+  }
+
+  provisioner "file" {
+    destination = "/tmp/consul.hcl"
+    content = templatefile("${path.root}/templates/consul_agent_conf.tftpl", {
+      node_name  = "consul_c${count.index + 1}"
+      ipv4_addr  = "${self.default_ip_address}"
+      retry_join = jsonencode(local.consul_ip_list)
+    })
+  }
+
+  provisioner "file" {
+    destination = "/tmp/vault.hcl"
+    content = templatefile("${path.root}/templates/vault_server_conf.tftpl", {
+      ipv4_addr = "${self.default_ip_address}"
+    })
+  }
+
+  provisioner "file" {
+    destination = "/tmp/vault_ufw_rules.sh"
+    content = templatefile("${path.root}/templates/vault_ufw_rules.tftpl", {
+      admin_ipv4_list = var.admin_ipv4_list
+    })
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo cp /tmp/consul.hcl /etc/consul.d/consul.hcl",
+      "sudo cp /tmp/vault.hcl /etc/vault.d/vault.hcl",
+      "sudo systemctl enable --now consul",
+      "sudo systemctl enable --now vault",
+      "sudo bash /tmp/vault_ufw_rules.sh",
+    ]
+  }
+
+}
