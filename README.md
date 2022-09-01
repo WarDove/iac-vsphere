@@ -22,9 +22,6 @@ Also for packer additional local variable values should be set for each type of 
 ---
 - File containing input variable values for Terraform `terraform.tfvars` should be created as a symlink to the `values.hcl` file in root folder.
 - File containing input variable values for Packer `packer.auto.pkrvars.hcl` should be created as a symlink to the `values.hcl` file in root folder.
----
-- File containing locals for Terraform `locals.tf` should be created as a symlink to the `locals.hcl` file in root folder.
-- File containing locals for Packer `locals.pkr.hcl` should be created as a symlink to the `locals.hcl` file in root folder.
 
 
 

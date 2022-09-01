@@ -9,7 +9,7 @@ touch /tmp/vm_encrypted_pass
 mkdir content
 
 # Increment build number
-n=122;#build number
+n=124;#build number
 next_n=$[$n+1]
 sed -i "/#build number$/s/=.*#/=$next_n;#/" ${0}
 
