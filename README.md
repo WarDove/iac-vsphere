@@ -35,7 +35,7 @@ Also for packer additional local variable values should be set for each type of 
 
 ## Usage/Examples
 
-Packer scripts should be launched only with with bash executable -> `packer-build`
+Packer scripts should be launched only with bash executable -> `packer-build`
 
 Data containin file examples are shown below.
 

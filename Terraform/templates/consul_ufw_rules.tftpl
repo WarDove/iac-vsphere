@@ -3,4 +3,7 @@
 ufw allow from ${ip} to any port 22
 ufw allow from ${ip} to any port 8500
 %{ endfor ~}
+ufw deny 22
+ufw deny 8500
+ufw allow to any
 echo y | sudo -S ufw enable 
