@@ -6,4 +6,3 @@ apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_re
 apt-get update
 apt install -y consul=1.13.1-1
 apt install vault=1.11.2-1
-apt install net-tools
