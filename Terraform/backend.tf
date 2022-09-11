@@ -4,6 +4,6 @@ terraform {
     region  = "eu-central-1"
     profile = "terraform"
     key     = "terraform.tfstate"
-    bucket  = "azin-infra-dev-state"
+    bucket  = "infra-dev-state"
   }
 }
