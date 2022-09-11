@@ -25,7 +25,7 @@ locals {
 
 locals {
   metadata_template_map = {
-    author                   = "AzInDevops"
+    author                   = "Devops"
     hostname                 = "${var.vm_guest_os_vendor}-${var.vm_role}"
     build_time               = local.buildtime
     build_tag                = local.buildnumber
