@@ -1,5 +1,5 @@
 
-![Logo](https://s3.eu-central-1.amazonaws.com/huseynov.tarlan/AD-minimized.png)
+![Logo](https://s3.eu-central-1.amazonaws.com/huseynov.tarlan/devops-black.png)
 #  HCL-Vsphere-Infra
 
 Hands-On Ready IaC for Vsphere, Terraform and Packer stack
